@@ -47,9 +47,11 @@ public abstract class SubCommand {
             return Collections.emptyList();
         }
 
-        for (SubCommand subcommand : subcommands) {
-            if (subcommand.getName().equalsIgnoreCase(args[0])) {
-                return subcommand.getTabCompletions();
+        if (getSubcommands().size() > 0) {
+            for (SubCommand subcommand : subcommands) {
+                if (subcommand.getName().equalsIgnoreCase(args[0])) {
+                    return subcommand.getTabCompletions();
+                }
             }
         }
 
