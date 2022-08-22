@@ -1,16 +1,73 @@
 package com.imjustdoom.cmdinstruction;
 
-import org.bukkit.command.CommandExecutor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 
+import java.util.Arrays;
 import java.util.List;
 
-public interface SubCommand {
+@Getter
+@Setter
+public abstract class SubCommand {
 
-    String getName();
+    private String name, permission;
+    private List<SubCommand> subcommands;
+    private List<String> tabCompletions;
+    private boolean requiresArgs;
 
-    void execute(CommandSender sender, String[] args);
+    public abstract void execute(CommandSender sender, String[] args);
 
-    List<SubCommand> getSubcommands();
+    public void handleCommand(CommandSender sender, String[] args) {
+        if (getPermission() != null && !sender.hasPermission(getPermission())) {
+            sender.sendMessage("You do not have permission to use this command.");
+            return;
+        }
+
+        if (getSubcommands().size() > 0) {
+            for (SubCommand subCommand : getSubcommands()) {
+                if (subCommand.getName().equalsIgnoreCase(args[0])) {
+                    subCommand.handleCommand(sender, args);
+                    return;
+                }
+            }
+        }
+
+        if (isRequiresArgs() && args.length < 1) {
+            sender.sendMessage("You must have more arguments.");
+            return;
+        }
+
+        execute(sender, args);
+    }
+
+    public SubCommand setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public SubCommand setSubcommands(SubCommand ... subcommands) {
+        this.subcommands = Arrays.asList(subcommands);
+        return this;
+    }
+
+    public SubCommand setPermission(String permission) {
+        this.permission = permission;
+        return this;
+    }
+
+    public SubCommand setRequiresArgs(boolean requiresArgs) {
+        this.requiresArgs = requiresArgs;
+        return this;
+    }
+
+    public SubCommand setTabCompletions(List<String> tabCompletions) {
+        this.tabCompletions = tabCompletions;
+        return this;
+    }
+
+    public SubCommand setTabCompletions(String ... tabCompletions) {
+        this.tabCompletions = Arrays.asList(tabCompletions);
+        return this;
+    }
 }
