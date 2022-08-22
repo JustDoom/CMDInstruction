@@ -47,7 +47,7 @@ public abstract class SubCommand {
             return Collections.emptyList();
         }
 
-        if (getSubcommands() != null || getSubcommands().size() > 0) {
+        if (getSubcommands() != null && getSubcommands().size() > 0) {
             for (SubCommand subcommand : subcommands) {
                 if (subcommand.getName().equalsIgnoreCase(args[0])) {
                     return subcommand.getTabCompletions();
