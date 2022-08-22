@@ -25,7 +25,7 @@ public abstract class SubCommand {
             return;
         }
 
-        if (getSubcommands().size() > 0) {
+        if (getSubcommands() != null && getSubcommands().size() > 0) {
             for (SubCommand subCommand : getSubcommands()) {
                 if (subCommand.getName().equalsIgnoreCase(args[0])) {
                     subCommand.handleCommand(sender, args);
