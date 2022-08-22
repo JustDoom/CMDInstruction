@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -39,6 +40,20 @@ public abstract class SubCommand {
         }
 
         execute(sender, args);
+    }
+
+    public List<String> handleTabComplete(CommandSender sender, String[] args) {
+        if(!sender.hasPermission(getPermission())) {
+            return Collections.emptyList();
+        }
+
+        for (SubCommand subcommand : subcommands) {
+            if (subcommand.getName().equalsIgnoreCase(args[0])) {
+                return subcommand.getTabCompletions();
+            }
+        }
+
+        return tabCompletions;
     }
 
     public SubCommand setName(String name) {

@@ -56,17 +56,13 @@ public abstract class Command implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
 
-        List<String> completions = new ArrayList<>();
-
         for (SubCommand subcommand : subcommands) {
             if (subcommand.getName().equalsIgnoreCase(args[0])) {
-                return subcommand.getTabCompletions();
-            } else {
-                //completions.add(subcommand.getName()); is this needed?
+                return subcommand.handleTabComplete(sender, args);
             }
         }
 
-        return completions;
+        return tabCompletions;
     }
 
     public Command setName(String name) {
