@@ -21,6 +21,7 @@ public abstract class SubCommand {
 
     public void handleCommand(CommandSender sender, String[] args) {
         if (getPermission() != null && !sender.hasPermission(getPermission())) {
+
             sender.sendMessage("You do not have permission to use this command.");
             return;
         }
